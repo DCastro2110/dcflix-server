@@ -5,6 +5,7 @@
   "author": "Davi Castro <santos.davi2110@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "commit": "commit",
     "dev": "nodemon --watch 'src/' --exec 'ts-node src/server.ts' -e ts"
   },
   "dependencies": {
@@ -12,8 +13,12 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "@commitlint/prompt-cli": "^17.3.0",
     "@types/express": "^4.17.14",
     "@types/node": "^18.11.13",
+    "husky": "^8.0.2",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
