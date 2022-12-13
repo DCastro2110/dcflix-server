@@ -24,17 +24,28 @@ export async function register(
       },
     });
 
-    const token = jwt.sign({ sub: user.id }, process.env.JWT_KEY as string, {
-      expiresIn: '7 days',
-    });
+    const token = jwt.sign(
+      { sub: user.id, name: user.name, email: user.email },
+      process.env.JWT_KEY as string,
+      {
+        expiresIn: '7 days',
+      }
+    );
 
-    res.status(201).json({
-      message: 'user created with sucess.',
-      statusCode: 201,
-      data: {
-        token,
-      },
-    });
+    res
+      .cookie('access_token', token, {
+        httpOnly: true,
+      })
+      .status(201)
+      .json({
+        message: 'user created with sucess.',
+        statusCode: 201,
+        data: {
+          email: user.email,
+          id: user.id,
+          name: user.name,
+        },
+      });
   } catch (err) {
     if (err instanceof PrismaClientKnownRequestError) {
       if ((err.code = 'P2002'))
