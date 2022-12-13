@@ -56,7 +56,35 @@ export async function register(
   }
 }
 
-export function me(req: Request, res: Response) {}
+export async function me(req: Request, res: Response, next: NextFunction) {
+  if (!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.'));
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.userId,
+      },
+    });
+
+    if (!user?.id) {
+      return next(new InvalidRequestError('User not found.'));
+    }
+
+    res.status(200).json({
+      message: 'User data was sent with success.',
+      statusCode: 200,
+      data: {
+        email: user.email,
+        id: user.id,
+        name: user.name,
+      },
+    });
+  } catch (err) {
+    next(new InternalServerError());
+  }
+}
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   if (!req.headers.authorization) {
@@ -116,11 +144,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export function logout(req: Request, res: Response, next: NextFunction) {
-  if(!req.userId) {
-    return next(new NoAuthorizationError('Credentials not sent.')); 
+  if (!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.'));
   }
   res.clearCookie('access_token').status(200).json({
     message: 'Logged out with success.',
-    statusCode: 200
-  })
+    statusCode: 200,
+  });
 }
