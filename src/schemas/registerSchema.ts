@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
-export const registerSchema = yup.object({
-  body: yup.object({
+export const registerSchema = yup.object().shape({
+  body: yup.object().shape({
     name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup
@@ -14,6 +14,6 @@ export const registerSchema = yup.object({
       .required()
       .oneOf([yup.ref('password'), null], 'Passwords are not the same.'),
   }),
-  query: yup.object({}),
-  params: yup.object({}),
+  query: yup.object().shape({}),
+  params: yup.object().shape({}),
 });
