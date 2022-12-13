@@ -114,3 +114,13 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     next(new InternalServerError());
   }
 }
+
+export function logout(req: Request, res: Response, next: NextFunction) {
+  if(!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.')); 
+  }
+  res.clearCookie('access_token').status(200).json({
+    message: 'Logged out with success.',
+    statusCode: 200
+  })
+}

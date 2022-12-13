@@ -3,6 +3,7 @@ import { Router } from 'express';
 import * as AuthController from './controllers/authController';
 
 import { validateSchemaMiddleware } from './middlewares/validateSchemaMiddleware';
+import { jwtVerifyMiddleware } from './middlewares/jwtVerifyMiddleware';
 
 import { registerSchema } from './schemas/registerSchema';
 
@@ -13,5 +14,6 @@ route.post(
   validateSchemaMiddleware(registerSchema),
   AuthController.register
 );
-route.get('/me', AuthController.me);
+route.get('/me', jwtVerifyMiddleware, AuthController.me);
 route.get('/login', AuthController.login);
+route.get('/logout', jwtVerifyMiddleware, AuthController.logout);
