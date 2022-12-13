@@ -17,5 +17,12 @@ export function errorsTreatmentMiddleware(
       statusCode: err.statusCode,
     });
   }
+
+  if (err) {
+    return res.status(500).json({
+      message: 'Internal error.',
+      statusCode: 500,
+    });
+  }
   next();
 }
