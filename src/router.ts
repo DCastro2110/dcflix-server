@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import * as AuthController from './controllers/authController';
-import * as MoviesController from './controllers/moviesController';
+import * as MediasController from './controllers/mediasController';
 
 import { validateSchemaMiddleware } from './middlewares/validateSchemaMiddleware';
 import { jwtVerifyMiddleware } from './middlewares/jwtVerifyMiddleware';
 
 import { registerSchema } from './schemas/registerSchema';
-import { removeMovieFromUserListSchema } from './schemas/removeMovieFromUserListSchema';
+import { removeMediaFromUserListSchema } from './schemas/removeMediaFromUserListSchema';
 
 export const route = Router();
 
@@ -20,11 +20,11 @@ route.get('/me', jwtVerifyMiddleware, AuthController.me);
 route.get('/login', AuthController.login);
 route.get('/logout', jwtVerifyMiddleware, AuthController.logout);
 
-route.get('/my-list', jwtVerifyMiddleware, MoviesController.getMyList);
-route.post('/my-list', jwtVerifyMiddleware, MoviesController.addToMyList);
+route.get('/my-list', jwtVerifyMiddleware, MediasController.getMyList);
+route.post('/my-list', jwtVerifyMiddleware, MediasController.addToMyList);
 route.delete(
   '/my-list',
-  validateSchemaMiddleware(removeMovieFromUserListSchema),
+  validateSchemaMiddleware(removeMediaFromUserListSchema),
   jwtVerifyMiddleware,
-  MoviesController.removeFromMyList
+  MediasController.removeFromMyList
 );

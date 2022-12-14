@@ -21,7 +21,7 @@ export async function removeFromMyList(
   }
 
   try {
-    await prisma.movie.update({
+    await prisma.media.update({
       where: {
         id: Number(req.params.mediaId as String),
       },
@@ -39,7 +39,7 @@ export async function removeFromMyList(
         id: req.userId,
       },
       data: {
-        listOfMovies: {
+        listOfMedias: {
           delete: {
             id: Number(req.params.mediaId as String),
           },
@@ -66,7 +66,7 @@ export async function getMyList(
   }
 
   try {
-    const movies = await prisma.movie.findMany({
+    const medias = await prisma.media.findMany({
       where: {
         users: {
           every: {
@@ -82,7 +82,7 @@ export async function getMyList(
       message: 'Movies sent with success.',
       statusCode: 200,
       data: {
-        movies,
+        medias,
       },
     });
   } catch (err) {
