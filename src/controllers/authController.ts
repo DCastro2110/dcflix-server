@@ -4,6 +4,8 @@ import * as bcrypt from 'bcryptjs';
 import { prisma } from '../libs/prisma';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
+import { jwtGenerator } from '../providers/jwtGenerator';
+
 import { InternalServerError } from '../errors/InternalServerError';
 import { InvalidRequestError } from '../errors/InvalidRequestError';
 import { NoAuthorizationError } from '../errors/NoAuthorizationError';
@@ -25,13 +27,11 @@ export async function register(
       },
     });
 
-    const token = jwt.sign(
-      { sub: user.id, name: user.name, email: user.email },
-      process.env.JWT_KEY as string,
-      {
-        expiresIn: '7 days',
-      }
-    );
+    const token = jwtGenerator({
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+    });
 
     res
       .cookie('access_token', token, {
@@ -42,9 +42,12 @@ export async function register(
         message: 'User created with success.',
         statusCode: 201,
         data: {
-          email: user.email,
-          id: user.id,
-          name: user.name,
+          token,
+          user: {
+            email: user.email,
+            id: user.id,
+            name: user.name,
+          },
         },
       });
   } catch (err) {
@@ -76,9 +79,11 @@ export async function me(req: Request, res: Response, next: NextFunction) {
       message: 'User data was sent with success.',
       statusCode: 200,
       data: {
-        email: user.email,
-        id: user.id,
-        name: user.name,
+        user: {
+          email: user.email,
+          id: user.id,
+          name: user.name,
+        },
       },
     });
   } catch (err) {
@@ -116,13 +121,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       return next(new NoAuthorizationError('Password is wrong.'));
     }
 
-    const token = jwt.sign(
-      { sub: user.id, name: user.name, email: user.email },
-      process.env.JWT_KEY as string,
-      {
-        expiresIn: '7 days',
-      }
-    );
+    const token = jwtGenerator({
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+    });
 
     res
       .cookie('access_token', token, {
@@ -133,9 +136,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         message: 'Logged with success.',
         statusCode: 200,
         data: {
-          email: user.email,
-          id: user.id,
-          name: user.name,
+          token,
+          user: {
+            email: user.email,
+            id: user.id,
+            name: user.name,
+          },
         },
       });
   } catch (err) {
