@@ -5,13 +5,56 @@ import { prisma } from '../libs/prisma';
 import { NoAuthorizationError } from '../errors/NoAuthorizationError';
 import { InternalServerError } from '../errors/InternalServerError';
 
-export function addToMyList(req: Request, res: Response, next: NextFunction) {}
-
-export function removeFromMyList(
+export async function addToMyList(
   req: Request,
   res: Response,
   next: NextFunction
 ) {}
+
+export async function removeFromMyList(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.'));
+  }
+
+  try {
+    await prisma.movie.update({
+      where: {
+        id: Number(req.params.mediaId as String),
+      },
+      data: {
+        users: {
+          delete: {
+            id: req.userId,
+          },
+        },
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        id: req.userId,
+      },
+      data: {
+        listOfMovies: {
+          delete: {
+            id: Number(req.params.mediaId as String),
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      message: 'Movie remove from user list with success.',
+      statusCode: 200,
+    });
+  } catch (err) {
+    next(new InternalServerError());
+  }
+}
 
 export async function getMyList(
   req: Request,
