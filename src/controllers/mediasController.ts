@@ -9,7 +9,45 @@ export async function addToMyList(
   req: Request,
   res: Response,
   next: NextFunction
-) {}
+) {
+  if (!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.'));
+  }
+
+  const { body } = req;
+
+  try {
+    prisma.media.upsert({
+      where: {
+        id: Number(req.params.mediaId as String),
+      },
+      create: {
+        id: Number(req.params.mediaId as String),
+        mediaType: body.media_type,
+        posterPath: body.poster_path,
+        title: body.title,
+        users: {
+          connect: {
+            id: req.userId,
+          },
+        },
+      },
+      update: {
+        users: {
+          connect: {
+            id: req.userId,
+          },
+        },
+      },
+    });
+    res.status(200).json({
+      message: 'Media added to user list with success.',
+      statusCode: 200,
+    });
+  } catch (err) {
+    next(new InternalServerError());
+  }
+}
 
 export async function removeFromMyList(
   req: Request,
@@ -27,28 +65,15 @@ export async function removeFromMyList(
       },
       data: {
         users: {
-          delete: {
+          disconnect: {
             id: req.userId,
           },
         },
       },
     });
 
-    await prisma.user.update({
-      where: {
-        id: req.userId,
-      },
-      data: {
-        listOfMedias: {
-          delete: {
-            id: Number(req.params.mediaId as String),
-          },
-        },
-      },
-    });
-
     res.status(200).json({
-      message: 'Movie remove from user list with success.',
+      message: 'Medias removed from user list with success.',
       statusCode: 200,
     });
   } catch (err) {
@@ -79,10 +104,16 @@ export async function getMyList(
     });
 
     res.status(200).json({
-      message: 'Movies sent with success.',
+      message: 'List of medias of user sent with success.',
       statusCode: 200,
       data: {
-        medias,
+        medias: medias.map((media) => ({
+          ...media,
+          poster_path: media.posterPath,
+          media_type: media.mediaType,
+          posterPath: undefined,
+          mediaType: undefined,
+        })),
       },
     });
   } catch (err) {
