@@ -17,7 +17,7 @@ export async function addToMyList(
   const { body } = req;
 
   try {
-    prisma.media.upsert({
+    await prisma.media.upsert({
       where: {
         id: Number(req.params.mediaId as String),
       },
@@ -77,6 +77,7 @@ export async function removeFromMyList(
       statusCode: 200,
     });
   } catch (err) {
+    console.log(err);
     next(new InternalServerError());
   }
 }
@@ -114,6 +115,42 @@ export async function getMyList(
           posterPath: undefined,
           mediaType: undefined,
         })),
+      },
+    });
+  } catch (err) {
+    next(new InternalServerError());
+  }
+}
+
+export async function verifyIfMediaIsInTheUserList(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.userId) {
+    return next(new NoAuthorizationError('Credentials not sent.'));
+  }
+
+  try {
+    const media = await prisma.media.findUnique({
+      where: {
+        id: Number(req.params.mediaId as String),
+      },
+      include: {
+        users: {
+          where: {
+            id: req.userId,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      message:
+        'Verification that the user added this movie to the list successfully made.',
+      statusCode: 200,
+      data: {
+        mediaInTheUserList: media?.users ? true : false,
       },
     });
   } catch (err) {

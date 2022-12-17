@@ -9,6 +9,7 @@ import { jwtVerifyMiddleware } from './middlewares/jwtVerifyMiddleware';
 import { registerSchema } from './schemas/registerSchema';
 import { removeMediaFromUserListSchema } from './schemas/removeMediaFromUserListSchema';
 import { addMediaToUserListSchema } from './schemas/addMediaToUserListSchema';
+import { verifyIfMediaIsInTheUserListSchema } from './schemas/verifyIfMediaIsInTheUserListSchema';
 
 export const route = Router();
 
@@ -21,8 +22,19 @@ route.get('/me', jwtVerifyMiddleware, AuthController.me);
 route.get('/login', AuthController.login);
 route.get('/logout', jwtVerifyMiddleware, AuthController.logout);
 
+route.get(
+  '/my-list/:mediaId',
+  validateSchemaMiddleware(verifyIfMediaIsInTheUserListSchema),
+  jwtVerifyMiddleware,
+  MediasController.verifyIfMediaIsInTheUserList
+);
 route.get('/my-list', jwtVerifyMiddleware, MediasController.getMyList);
-route.post('/my-list/:mediaId', validateSchemaMiddleware(addMediaToUserListSchema), jwtVerifyMiddleware, MediasController.addToMyList);
+route.post(
+  '/my-list/:mediaId',
+  validateSchemaMiddleware(addMediaToUserListSchema),
+  jwtVerifyMiddleware,
+  MediasController.addToMyList
+);
 route.delete(
   '/my-list/:mediaId',
   validateSchemaMiddleware(removeMediaFromUserListSchema),
