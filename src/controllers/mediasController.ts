@@ -25,6 +25,7 @@ export async function addToMyList(
         id: Number(req.params.mediaId as String),
         mediaType: body.media_type,
         posterPath: body.poster_path,
+        overview: body.overview,
         title: body.title,
         users: {
           connect: {
@@ -59,7 +60,7 @@ export async function removeFromMyList(
   }
 
   try {
-    await prisma.media.update({
+    const media = await prisma.media.update({
       where: {
         id: Number(req.params.mediaId as String),
       },
@@ -103,6 +104,8 @@ export async function getMyList(
         },
       },
     });
+
+    console.log(medias);
 
     res.status(200).json({
       message: 'List of medias of user sent with success.',
@@ -150,7 +153,8 @@ export async function verifyIfMediaIsInTheUserList(
         'Verification that the user added this movie to the list successfully made.',
       statusCode: 200,
       data: {
-        mediaInTheUserList: media?.users ? true : false,
+        mediaInTheUserList:
+          media?.users && media?.users.length > 0 ? true : false,
       },
     });
   } catch (err) {

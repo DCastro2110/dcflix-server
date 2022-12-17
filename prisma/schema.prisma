@@ -28,6 +28,7 @@ model Media {
   title      String
   posterPath String
   mediaType  String
+  overview   String @db.LongText
 
   users User[]
 }

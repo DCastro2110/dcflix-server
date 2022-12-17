@@ -5,6 +5,7 @@ export const addMediaToUserListSchema = yup.object().shape({
     title: yup.string().required(),
     poster_path: yup.string().url(),
     media_type: yup.string(),
+    overview: yup.string().required(),
   }),
   query: yup.object().shape({}),
   params: yup.object().shape({
