@@ -17,7 +17,8 @@ model User {
   email    String @unique
   password String
 
-  listOfMedias Media[]
+  listOfMedias        Media[]
+  idToRecoverPassword IdToRecoverPassword?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,4 +32,11 @@ model Media {
   overview   String @db.LongText
 
   users User[]
+}
+
+model IdToRecoverPassword {
+  id        String @id @default(cuid())
+  userId    String @unique
+  expiresIn String
+  user      User   @relation(fields: [userId], references: [id])
 }

@@ -10,6 +10,7 @@ import { registerSchema } from './schemas/registerSchema';
 import { removeMediaFromUserListSchema } from './schemas/removeMediaFromUserListSchema';
 import { addMediaToUserListSchema } from './schemas/addMediaToUserListSchema';
 import { verifyIfMediaIsInTheUserListSchema } from './schemas/verifyIfMediaIsInTheUserListSchema';
+import { getLinkToRecoverPasswordSchema } from './schemas/getLinkToRecoverPasswordSchema';
 
 export const route = Router();
 
@@ -21,6 +22,13 @@ route.post(
 route.get('/me', jwtVerifyMiddleware, AuthController.me);
 route.get('/login', AuthController.login);
 route.get('/logout', jwtVerifyMiddleware, AuthController.logout);
+route.post(
+  '/forgot-password/get-link',
+  validateSchemaMiddleware(getLinkToRecoverPasswordSchema),
+  AuthController.getLinkToRecoverPassword
+);
+route.get('/forgot-password/:id');
+route.post('/forgot-password/change-password');
 
 route.get(
   '/my-list/:mediaId',
