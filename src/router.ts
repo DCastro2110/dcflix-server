@@ -27,8 +27,11 @@ route.post(
   validateSchemaMiddleware(getLinkToRecoverPasswordSchema),
   AuthController.getLinkToRecoverPassword
 );
-route.get('/forgot-password/new-password/:id');
-route.post('/forgot-password/change-password');
+route.get(
+  '/forgot-password/new-password/:id',
+  AuthController.verifyIfRecoverPasswordIdIsValid
+);
+route.patch('/forgot-password/new-password/:id', AuthController.changePassword);
 
 route.get(
   '/my-list/:mediaId',

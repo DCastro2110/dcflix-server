@@ -220,7 +220,96 @@ export async function getLinkToRecoverPassword(
       statusCode: 200,
     });
   } catch (err) {
-    console.log(err);
+    next(new InternalServerError());
+  }
+}
+
+export async function verifyIfRecoverPasswordIdIsValid(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  try {
+    const idToRecoverPassword = await prisma.idToRecoverPassword.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!idToRecoverPassword) {
+      return next(new InvalidRequestError('Id not found.'));
+    }
+
+    if (parseInt(idToRecoverPassword.expiresIn) < new Date().getTime()) {
+      await prisma.idToRecoverPassword.delete({
+        where: {
+          id,
+        },
+      });
+      return next(new InvalidRequestError('The id has expired.'));
+    }
+
+    res.status(200).json({
+      message: 'Id for recover password is valid.',
+      statusCode: 200,
+    });
+  } catch (err) {
+    next(new InternalServerError());
+  }
+}
+
+export async function changePassword(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+  const { passwordNoHash } = req.body;
+
+  const password = bcrypt.hashSync(passwordNoHash, 10);
+
+  try {
+    const idToRecoverPassword = await prisma.idToRecoverPassword.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!idToRecoverPassword) {
+      return next(new InvalidRequestError('Id not found.'));
+    }
+
+    if (parseInt(idToRecoverPassword.expiresIn) < new Date().getTime()) {
+      await prisma.idToRecoverPassword.delete({
+        where: {
+          id,
+        },
+      });
+      return next(new InvalidRequestError('The id has expired.'));
+    }
+
+    await prisma.user.update({
+      where: {
+        id: idToRecoverPassword.userId,
+      },
+      data: {
+        password,
+      },
+    });
+
+    await prisma.idToRecoverPassword.delete({
+      where: {
+        id,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Password was changed with success.',
+      statusCode: 200,
+    });
+  } catch (err) {
     next(new InternalServerError());
   }
 }
