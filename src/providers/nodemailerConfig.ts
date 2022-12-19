@@ -1,13 +1,10 @@
-import { NextFunction } from 'express';
 import nodemailer from 'nodemailer';
-
-import { InternalServerError } from '../errors/InternalServerError';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    user: process.env.NODEMAILER_EMAIL,
+    pass: process.env.NODEMAILER_PASSWORD,
   },
 });
 

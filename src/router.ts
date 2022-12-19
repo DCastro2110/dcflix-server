@@ -27,7 +27,7 @@ route.post(
   validateSchemaMiddleware(getLinkToRecoverPasswordSchema),
   AuthController.getLinkToRecoverPassword
 );
-route.get('/forgot-password/:id');
+route.get('/forgot-password/new-password/:id');
 route.post('/forgot-password/change-password');
 
 route.get(
