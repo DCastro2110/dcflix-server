@@ -60,7 +60,7 @@ export async function removeFromMyList(
   }
 
   try {
-    const media = await prisma.media.update({
+    await prisma.media.update({
       where: {
         id: Number(req.params.mediaId as String),
       },
@@ -78,7 +78,6 @@ export async function removeFromMyList(
       statusCode: 200,
     });
   } catch (err) {
-    console.log(err);
     next(new InternalServerError());
   }
 }
@@ -96,7 +95,7 @@ export async function getMyList(
     const medias = await prisma.media.findMany({
       where: {
         users: {
-          every: {
+          some: {
             id: {
               equals: req.userId,
             },
@@ -104,8 +103,6 @@ export async function getMyList(
         },
       },
     });
-
-    console.log(medias);
 
     res.status(200).json({
       message: 'List of medias of user sent with success.',
@@ -154,7 +151,7 @@ export async function verifyIfMediaIsInTheUserList(
       statusCode: 200,
       data: {
         mediaInTheUserList:
-          media?.users && media?.users.length > 0 ? true : false,
+          media?.users && media.users.length > 0 ? true : false,
       },
     });
   } catch (err) {
