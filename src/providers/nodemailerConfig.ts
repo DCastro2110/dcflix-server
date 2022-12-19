@@ -17,7 +17,7 @@ interface IMailOptions {
 export async function sendEmail(mailOptions: IMailOptions) {
   const options = {
     ...mailOptions,
-    from: process.env.USER,
+    from: process.env.NODEMAILER_EMAIL,
   };
 
   let isError = false;
