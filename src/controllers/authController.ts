@@ -266,7 +266,7 @@ export async function changePassword(
   next: NextFunction
 ) {
   const { id } = req.params;
-  const { passwordNoHash } = req.body;
+  const { password: passwordNoHash } = req.body;
 
   const password = bcrypt.hashSync(passwordNoHash, 10);
 
