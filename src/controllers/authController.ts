@@ -173,22 +173,27 @@ export async function getLinkToRecoverPassword(
       where: {
         email,
       },
+      include: {
+        idToRecoverPassword: true,
+      },
     });
 
     if (!user) {
       return next(new InvalidRequestError('User not found.'));
     }
 
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        idToRecoverPassword: {
-          delete: true,
+    if (user.idToRecoverPassword) {
+      await prisma.user.update({
+        where: {
+          id: user.id,
         },
-      },
-    });
+        data: {
+          idToRecoverPassword: {
+            delete: true,
+          },
+        },
+      });
+    }
 
     const now = new Date().getTime();
     const expiresIn = String(now + 3600000);
