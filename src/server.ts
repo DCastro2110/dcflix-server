@@ -11,7 +11,7 @@ dotenv.config();
 
 const server = express();
 
-server.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+server.use(cors({ credentials: true, origin: process.env.FRONT_URL }));
 server.use(cookieParser());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
