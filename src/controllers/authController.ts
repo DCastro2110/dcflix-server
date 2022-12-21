@@ -38,6 +38,7 @@ export async function register(
     res
       .cookie('access_token', token, {
         httpOnly: true,
+        secure: process.env.MODE === 'DEVELOPMENT' ? false : true,
       })
       .status(201)
       .json({
@@ -132,6 +133,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     res
       .cookie('access_token', token, {
         httpOnly: true,
+        secure: process.env.MODE === 'DEVELOPMENT' ? false : true,
       })
       .status(200)
       .json({
