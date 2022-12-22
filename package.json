@@ -1,14 +1,14 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "index.js",
   "author": "Davi Castro <santos.davi2110@gmail.com>",
   "license": "MIT",
   "scripts": {
     "commit": "commit",
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "postinstall": "tsc",
-    "dev": "nodemon --watch 'src/' --exec 'ts-node src/server.ts' -e ts"
+    "dev": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts"
   },
   "dependencies": {
     "@prisma/client": "4.7.1",
