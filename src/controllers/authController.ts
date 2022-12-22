@@ -38,7 +38,8 @@ export async function register(
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: process.env.MODE === 'DEVELOPMENT' ? false : true,
+        secure: !(process.env.MODE === 'DEVELOPMENT'),
+        sameSite: 'none',
       })
       .status(201)
       .json({
@@ -133,7 +134,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: process.env.MODE === 'DEVELOPMENT' ? false : true,
+        secure: !(process.env.MODE === 'DEVELOPMENT'),
+        sameSite: 'none',
       })
       .status(200)
       .json({
@@ -157,10 +159,17 @@ export function logout(req: Request, res: Response, next: NextFunction) {
   if (!req.userId) {
     return next(new NoAuthorizationError('Credentials not sent.'));
   }
-  res.clearCookie('access_token').status(200).json({
-    message: 'Logged out with success.',
-    statusCode: 200,
-  });
+  res
+    .clearCookie('access_token', {
+      sameSite: 'none',
+      httpOnly: true,
+      secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
+    })
+    .status(200)
+    .json({
+      message: 'Logged out with success.',
+      statusCode: 200,
+    });
 }
 
 export async function getLinkToRecoverPassword(
