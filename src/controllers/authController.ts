@@ -40,6 +40,7 @@ export async function register(
         httpOnly: true,
         secure: !(process.env.MODE === 'DEVELOPMENT'),
         sameSite: 'none',
+        domain: process.env.FRONT_URL,
       })
       .status(201)
       .json({
@@ -136,6 +137,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         httpOnly: true,
         secure: !(process.env.MODE === 'DEVELOPMENT'),
         sameSite: 'none',
+        domain: process.env.FRONT_URL,
       })
       .status(200)
       .json({
@@ -164,6 +166,7 @@ export function logout(req: Request, res: Response, next: NextFunction) {
       sameSite: 'none',
       httpOnly: true,
       secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
+      domain: process.env.FRONT_URL,
     })
     .status(200)
     .json({
