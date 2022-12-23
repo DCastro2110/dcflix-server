@@ -38,7 +38,7 @@ export async function register(
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: !(process.env.MODE === 'DEVELOPMENT'),
+        secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
         sameSite: 'none',
       })
       .status(201)
@@ -134,7 +134,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: !(process.env.MODE === 'DEVELOPMENT'),
+        secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
         sameSite: 'none',
       })
       .status(200)
