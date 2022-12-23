@@ -131,3 +131,5 @@ dist
 
 # Others
 private.txt
+*.csr
+*.key
