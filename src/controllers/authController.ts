@@ -38,8 +38,8 @@ export async function register(
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
-        sameSite: 'none',
+        secure: !(process.env.NODE_ENV === 'development'),
+        sameSite: !(process.env.NODE_ENV === 'development'),
       })
       .status(201)
       .json({
@@ -134,8 +134,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     res
       .cookie('access_token', token, {
         httpOnly: true,
-        secure: !(process.env.NODE_ENV === 'DEVELOPMENT'),
-        sameSite: 'none',
+        secure: !(process.env.NODE_ENV === 'development'),
+        sameSite: !(process.env.NODE_ENV === 'development'),
       })
       .status(200)
       .json({

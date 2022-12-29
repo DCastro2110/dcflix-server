@@ -11,6 +11,8 @@ dotenv.config();
 
 const server = express();
 
+console.log(process.env.NODE_ENV);
+
 server.use(cors({ credentials: true, origin: process.env.FRONT_URL }));
 server.use(cookieParser());
 server.use(express.json());
