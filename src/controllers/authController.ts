@@ -59,6 +59,7 @@ export async function register(
       if ((err.code = 'P2002'))
         return next(new InvalidRequestError('E-mail already registered.'));
     }
+    console.log(err);
     next(new InternalServerError());
   }
 }
@@ -151,6 +152,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         },
       });
   } catch (err) {
+    console.log(err);
     next(new InternalServerError());
   }
 }
