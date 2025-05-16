@@ -31,7 +31,7 @@ route.get(
   '/forgot-password/new-password/:id',
   AuthController.verifyIfRecoverPasswordIdIsValid
 );
-route.patch('/forgot-password/new-password/:id', AuthController.changePassword);
+route.put('/forgot-password/new-password/:id', AuthController.changePassword);
 
 route.get(
   '/my-list/:mediaId',
