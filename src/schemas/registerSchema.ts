@@ -1,25 +1,24 @@
-import * as yup from 'yup';
+import * as z from 'zod';
 
-export const registerSchema = yup.object().shape({
-  body: yup.object().shape({
-    name: yup.string().required(),
-    email: yup
+export const registerSchema = z.object({
+  body: z.object({
+    name: z.string(),
+    email: z
       .string()
       .email('The format of email is invalid.')
-      .required('Email field cannot be empty.'),
-    password: yup
+      .nonempty('Email field cannot be empty.'),
+    password: z
       .string()
-      .required('Password field cannot be empty.')
+      .nonempty('Password field cannot be empty.')
       .min(8, 'The password must have at least 8 characters.')
-      .matches(
+      .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
         'The format of password is invalid.'
       ),
-    passwordConfirmation: yup
-      .string()
-      .required()
-      .oneOf([yup.ref('password'), null], 'Passwords are not the same.'),
-  }),
-  query: yup.object().shape({}),
-  params: yup.object().shape({}),
+    passwordConfirmation: z.string().nonempty()
+  }).refine(schema => {
+    return (schema.password === schema.passwordConfirmation)
+  }, "The password are not the same!"),
+  query: z.object({}).optional(),
+  params: z.object({}).optional(),
 });

@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { prisma } from '../libs/prisma';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { jwtGenerator } from '../providers/jwtGenerator';
 import { sendEmail } from '../providers/nodemailerConfig';
 

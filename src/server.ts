@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+
 
 import { errorsTreatmentMiddleware } from './middlewares/errorsTreatmentMiddleware';
 
@@ -18,7 +19,7 @@ server.use(cookieParser());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(route);
-server.use(errorsTreatmentMiddleware);
+// server.use(errorsTreatmentMiddleware as RequestHandler);
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

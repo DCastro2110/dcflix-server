@@ -1,9 +1,9 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const verifyIfRecoverPasswordIdIsValidSchema = yup.object().shape({
-  body: yup.object().shape({}),
-  query: yup.object().shape({}),
-  params: yup.object().shape({
-    id: yup.string().required(),
-  }),
-});
+export const verifyIfRecoverPasswordIdIsValidSchema = z.object({
+  body: z.object({}).optional(),
+  query: z.object({}).optional(),
+  params: z.object({id: z.string()}).optional()
+})
+
+;

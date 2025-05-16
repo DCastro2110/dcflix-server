@@ -1,14 +1,15 @@
-import * as yup from 'yup';
+import {z} from 'zod'
 
-export const addMediaToUserListSchema = yup.object().shape({
-  body: yup.object().shape({
-    title: yup.string().required(),
-    poster_path: yup.string().url(),
-    media_type: yup.string(),
-    overview: yup.string().required(),
-  }),
-  query: yup.object().shape({}),
-  params: yup.object().shape({
-    mediaId: yup.string().required(),
-  }),
-});
+export const addMediaToUserListSchema = z.object({
+  body: z.object({
+     title: z.string(),
+    poster_path: z.string().url(),
+    media_type: z.string(),
+    overview: z.string()
+  }), 
+  query: z.object({}).optional(),
+  params: z.object({
+     mediaId: z.string(),
+  })
+})
+ 

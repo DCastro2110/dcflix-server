@@ -1,9 +1,10 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const getLinkToRecoverPasswordSchema = yup.object().shape({
-  body: yup.object().shape({
-    email: yup.string().email().required(),
+export const getLinkToRecoverPasswordSchema  = z.object({
+  body: z.object({
+    email: z.string().email()
   }),
-  query: yup.object().shape({}),
-  params: yup.object().shape({}),
-});
+  query: z.object({}).optional(),
+  params: z.object({}).optional()
+})
+
